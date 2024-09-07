@@ -1,0 +1,142 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">État des Environnements et Serveurs</h1>
+    
+    <!-- État des environnements -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">État des Environnements</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {% for environnement in environnements %}
+            <a href="{% url 'environnement_details' environnement.id %}">
+
+                <div class="p-4 rounded-lg 
+                    {% if environnement.departement.nom == 'DDI' %}
+                        bg-green-100
+                    {% elif environnement.departement.nom == 'DPI' %}
+                        bg-yellow-100
+                    {% else %}
+                        bg-red-100
+                    {% endif %}
+                    ">
+                    <h3 class="font-semibold">{{ environnement.nom  }}</h3>
+                    <p class="text-green-600">{{ environnement.departement }}</p>
+                </div>
+            </a>
+            {% empty %}
+            <p class="text-center col-span-full">Aucun environnement disponible.</p>
+            {% endfor %}
+{% comment %}             
+            <div class="p-4 bg-green-100 rounded-lg">
+                <h3 class="font-semibold">Production</h3>
+                <p class="text-green-600">Opérationnel</p>
+            </div>
+            <div class="p-4 bg-yellow-100 rounded-lg">
+                <h3 class="font-semibold">Pré-production</h3>
+                <p class="text-yellow-600">Maintenance</p>
+            </div>
+            <div class="p-4 bg-green-100 rounded-lg">
+                <h3 class="font-semibold">Test</h3>
+                <p class="text-green-600">Opérationnel</p>
+            </div>
+            <div class="p-4 bg-red-100 rounded-lg">
+                <h3 class="font-semibold">Développement</h3>
+                <p class="text-red-600">Incident</p>
+            </div> {% endcomment %}
+        </div>
+    </div>
+    
+    <!-- État des serveurs --> 
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">État des Serveurs</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {% for serveur in serveurs %}
+            <a href="{% url 'serveur_details' serveur.id %}">
+
+                <div class="p-4 bg-gray-50 rounded-lg flex items-center space-x-4">
+                    <i class="fas fa-server text-4xl
+                        {% if serveur.etat  %}
+                            text-green-600
+                        {% else %}
+                            text-gray-600
+                        {% endif %}
+                    "></i>
+                    <div>
+                        <h3 class="font-semibold text-lg">
+                            {{ serveur.hostname }}
+
+                        </h3>
+                        
+                        {% for serveur_role in serveur.roles.all %}
+                            <h6>{{ serveur.environnement }} - {{ serveur_role.role.nom }} </h6>
+                        {% endfor %}
+                        
+                        <p class="
+                            {% if serveur.etat  %}
+                                text-green-600
+                            {% else %}
+                                text-gray-600
+                            {% endif %}
+                        ">
+                            {% if serveur.etat  %}
+                                En ligne
+                            {% else %}
+                                Hors ligne
+                            {% endif %}                         
+                        {% comment %} {% if serveur.etat == 'Hors ligne' %}
+                                Hors ligne
+                            {% elif serveur.cpu_usage|floatformat:0 > 80 %}
+                                Charge élevée
+                            {% else %}
+                                En ligne
+                            {% endif %} {% endcomment %}
+                        </p>
+                        <p class="text-sm text-gray-500">CPU: 45% | RAM: 60%</p>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <p class="text-center col-span-full">Aucun serveur disponible.</p>
+            {% endfor %}
+            <!-- Serveur 1 -->
+            <div class="p-4 bg-gray-50 rounded-lg flex items-center space-x-4">
+                <i class="fas fa-server text-4xl text-green-600"></i>
+                <div>
+                    <h3 class="font-semibold text-lg">Serveur 1</h3>
+                    <p class="text-green-600">En ligne</p>
+                    <p class="text-sm text-gray-500">CPU: 45% | RAM: 60%</p>
+                </div>
+            </div>
+            <!-- Serveur 2 -->
+            <div class="p-4 bg-gray-50 rounded-lg flex items-center space-x-4">
+                <i class="fas fa-server text-4xl text-yellow-600"></i>
+                <div>
+                    <h3 class="font-semibold text-lg">Serveur 2</h3>
+                    <p class="text-yellow-600">Charge élevée</p>
+                    <p class="text-sm text-gray-500">CPU: 75% | RAM: 80%</p>
+                </div>
+            </div>
+            <!-- Serveur 3 -->
+            <div class="p-4 bg-gray-50 rounded-lg flex items-center space-x-4">
+                <i class="fas fa-server text-4xl text-red-600"></i>
+                <div>
+                    <h3 class="font-semibold text-lg">Serveur 3</h3>
+                    <p class="text-red-600">Hors ligne</p>
+                    <p class="text-sm text-gray-500">CPU: N/A | RAM: N/A</p>
+                </div>
+            </div>
+            <!-- Serveur 4 -->
+            <div class="p-4 bg-gray-50 rounded-lg flex items-center space-x-4">
+                <i class="fas fa-server text-4xl text-green-600"></i>
+                <div>
+                    <h3 class="font-semibold text-lg">Serveur 4</h3>
+                    <p class="text-green-600">En ligne</p>
+                    <p class="text-sm text-gray-500">CPU: 50% | RAM: 55%</p>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,72 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto p-6">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Détails du Serveur</h2>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <!-- Informations sur le Serveur (4 colonnes) -->
+            <div class="md:col-span-4 bg-gray-50 p-4 rounded-lg shadow-inner">
+                <h3 class="text-xl font-semibold mb-2">Informations du Serveur</h3>
+                <p class="mb-2"><strong>Nom d'Hôte :</strong> {{ serveur.hostname }}</p>
+                <p class="mb-2"><strong>IP :</strong> {{ serveur.IP }}</p>
+                <p class="mb-2"><strong>Domain :</strong> {{ serveur.domain }}</p>
+                
+                <h4 class="text-lg font-medium mt-4 mb-2">Environnement</h4>
+                <p class="mb-2"><strong>Nom :</strong> {{ serveur.environnement.nom }}</p>
+                
+                <h4 class="text-lg font-medium mt-4 mb-2">Département</h4>
+                <p class="mb-2"><strong>Nom :</strong> {{ serveur.environnement.departement.nom }}</p>
+            </div>
+            
+             <!-- Accordéon pour Crédits et Services (8 colonnes) -->
+             <div class="md:col-span-8 bg-gray-50 p-4 rounded-lg shadow-inner">
+                <h3 class="text-xl font-semibold mb-4">Crédits et Services</h3>
+                <!-- Accordéon avec Alpine.js -->
+                <div x-data="{ openCredential: false, openService: false }">
+                    <!-- Section Crédits -->
+                    <div class="mb-4">
+                        <button @click="openCredential = !openCredential" class="w-full text-left text-lg font-semibold flex items-center justify-between py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none transition">
+                            <span>Crédits</span>
+                            <svg :class="{ 'rotate-180': openCredential, 'rotate-0': !openCredential }" class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div x-show="openCredential" class="mt-2 overflow-hidden transition-all duration-300 ease-in-out max-h-60">
+                            <ul class="list-disc pl-5">
+                                {% for credit in serveur.credits.all %}
+                                    <li>{{ credit.nom }}</li>
+                                {% empty %}
+                                    <li>Aucun crédit attribué.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Section Services -->
+                    <div>
+                        <button @click="openService = !openService" class="w-full text-left text-lg font-semibold flex items-center justify-between py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none transition">
+                            <span>Services</span>
+                            <svg :class="{ 'rotate-180': openService, 'rotate-0': !openService }" class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div x-show="openService" class="mt-2 overflow-hidden transition-all duration-300 ease-in-out max-h-60">
+                            <ul class="list-disc pl-5">
+                                {% for service in serveur.services.all %}
+                                    <li>{{ service.nom }}</li>
+                                {% empty %}
+                                    <li>Aucun service attribué.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <a href="{% url 'home' %}" class="inline-block mt-6 px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600">Retour à la liste</a>
+    </div>
+</div>
+{% endblock %}

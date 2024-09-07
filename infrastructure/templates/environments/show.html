@@ -1,0 +1,78 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto p-6">
+    <div class="grid grid-cols-12 gap-6">
+        <!-- Informations sur l'environnement (4 colonnes) -->
+        <div class="col-span-12 md:col-span-4 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold mb-4">Détails de l'Environnement</h2>
+            <p class="mb-2"><strong>Nom :</strong> {{ environnement.nom }}</p>
+            <p><strong>Département :</strong> {{ environnement.departement.nom }}</p>
+        </div>
+        
+        <!-- Informations sur les serveurs (8 colonnes) -->
+        <div class="col-span-12 md:col-span-8 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold mb-4">Serveurs dans cet Environnement</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for serveur in environnement.serveurs.all %}
+                    {% comment %} <div class="bg-white p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">{{ serveur.hostname }}</h3>
+                        <p class="mb-1"><strong>IP :</strong> {{ serveur.IP }}</p>
+                        <p><strong>Domain :</strong> {{ serveur.domain }}</p>
+                    </div> {% endcomment %}
+                    <div class="p-4 shadow-md bg-gray-50 rounded-lg flex items-center space-x-4">
+                        <i class="fas fa-server text-4xl
+                        text-gray-600
+                        {% comment %} {% if serveur.etat  %}
+                        text-green-600
+                        {% else %}
+                        text-gray-600
+                            {% endif %} {% endcomment %}
+                         "></i>
+                        <div>
+                            {% comment %} <h3 class="font-semibold text-lg">
+                                {{ serveur.hostname }}
+        
+                            </h3> {% endcomment %}
+                            <h3 class="text-xl font-semibold mb-2">{{ serveur.hostname }}</h3>
+                            <p class="mb-1"><strong>IP :</strong> {{ serveur.IP }}</p>
+                            <p><strong>Domain :</strong> {{ serveur.domain }}</p>
+                            
+                            {% comment %} {% for serveur_role in serveur.roles %}
+                                <h6>{{ serveur_role.environnement }} - {{ serveur_role.role.nom }} </h6>
+                            {% endfor %} {% endcomment %}
+                            
+                            <p class="
+                                {% if serveur.etat  %}
+                                    text-green-600
+                                {% else %}
+                                    text-gray-600
+                                {% endif %}
+                            ">
+                                {% if serveur.etat  %}
+                                    En ligne
+                                {% else %}
+                                    Hors ligne
+                                {% endif %}                         
+                            {% comment %} {% if serveur.etat == 'Hors ligne' %}
+                                    Hors ligne
+                                {% elif serveur.cpu_usage|floatformat:0 > 80 %}
+                                    Charge élevée
+                                {% else %}
+                                    En ligne
+                                {% endif %} {% endcomment %}
+                            </p>
+                            <p class="text-sm text-gray-500">CPU: 45% | RAM: 60%</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Aucun serveur dans cet environnement.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'home' %}" class="inline-block mt-6 px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600">Retour à la liste</a>
+</div>
+
+{% endblock %}
