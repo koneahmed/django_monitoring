@@ -12,9 +12,9 @@
             <a href="{% url 'environnement_details' environnement.id %}">
 
                 <div class="p-4 rounded-lg 
-                    {% if environnement.departement == 'DDI' %}
+                    {% if environnement.departement.nom == 'DDI' %}
                         bg-green-100
-                    {% elif environnement.departement == 'DPI' %}
+                    {% elif environnement.departement.nom == 'DPI' %}
                         bg-yellow-100
                     {% else %}
                         bg-red-100
@@ -68,7 +68,7 @@
 
                         </h3>
                         
-                        {% for serveur_role in roles %}
+                        {% for serveur_role in serveur.roles.all %}
                             <h6>{{ serveur.environnement }} - {{ serveur_role.role.nom }} </h6>
                         {% endfor %}
                         
@@ -79,8 +79,11 @@
                                 text-gray-600
                             {% endif %}
                         ">
-                        État: <span class="{% if serveur.etat == 'Disponible' %}text-green-500{% else %}text-red-500{% endif %}">
-                            {{ serveur.etat }}                    
+                            {% if serveur.etat  %}
+                                En ligne
+                            {% else %}
+                                Hors ligne
+                            {% endif %}                         
                         {% comment %} {% if serveur.etat == 'Hors ligne' %}
                                 Hors ligne
                             {% elif serveur.cpu_usage|floatformat:0 > 80 %}
@@ -89,19 +92,14 @@
                                 En ligne
                             {% endif %} {% endcomment %}
                         </p>
-                        {% if serveur.etat == 'Disponible' %}
-                        <p class="text-sm text-gray-500">CPU: {{ serveur.cpu }} % | RAM: {{ serveur.ram }} %</p>
-                        {% else %}
-                        <p class="text-sm text-gray-500">CPU: N/A | RAM: N/A </p>
-                        {% endif %}
+                        <p class="text-sm text-gray-500">CPU: 45% | RAM: 60%</p>
                     </div>
                 </div>
             </a>
             {% empty %}
             <p class="text-center col-span-full">Aucun serveur disponible.</p>
             {% endfor %}
-
-            {% comment %} <!-- Serveur 1 -->
+            <!-- Serveur 1 -->
             <div class="p-4 bg-gray-50 rounded-lg flex items-center space-x-4">
                 <i class="fas fa-server text-4xl text-green-600"></i>
                 <div>
@@ -136,8 +134,7 @@
                     <p class="text-green-600">En ligne</p>
                     <p class="text-sm text-gray-500">CPU: 50% | RAM: 55%</p>
                 </div>
-            </div>  {% endcomment %}
-
+            </div> 
         </div>
     </div>
 </div>
